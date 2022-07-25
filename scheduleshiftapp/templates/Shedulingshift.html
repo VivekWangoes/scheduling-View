@@ -1,0 +1,560 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Scheduling Shift</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'Scheduleshiftpage.css' %}">
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <button class='openCloseAddEmployeeForm' onclick='openCloseAddEmployeeForm()'>Add Employee</button>
+    <div class='weekshedulerBox'>
+      <i class='fa fa-angle-left fafaicon' onclick="prevdate()"></i>
+      <input id='todaydate' class='weekshduledinfobox'>
+      <i class='fa fa-angle-right fafaicon' onclick='nextdate()'></i>
+    </div>
+    <div class='AddEmployeeForm' id='AddEmployeeFormid' >
+        <h4 class='container-column-heading'>Add a Employee Information</h4>
+        <hr class="mt-0" style="margin-bottom: 15px;">
+        <form class ='addEmployeeInfo' id='addEmployeeInfoid' method="post">{% csrf_token %}
+            <div class="input-flex">
+                <label for="selectShiftId" class="mb-0">Name :</label>
+                <input type="text" class="input-boxSize" id="Employeenameid" name="Employeename" placeholder='Name' required>
+            </div>
+            <div class="input-flex">
+                <label for="selectShiftId" class="mb-0">Shift :</label>
+                <select name="Shift" id="selectShiftId" class="input-boxSize mb-0" required>
+                    <option value="" disabled selected>Select your option</option>
+                    <option value="Morning Shift">Morning Shift</option>
+                    <option value="Afternoon Shift">Afternoon Shift</option>
+                    <option value="Evening Shift">Evening Shift</option>
+                </select>
+            </div><br>
+            <div class="input-flex">
+              <label for="selectShiftId" class="mb-0">Date :</label>
+              <input type="Date" class="input-boxSize" id="EmployeeDate" name="Date" placeholder='date' required>
+            </div>
+            <hr style='margin-bottom: 10px;'>
+            <button class='form-submitBtn' type="submit">Add Task</button>
+        </form>
+        <button class="form-cancelBtn" onclick="openCloseAddEmployeeForm()">Cancel</button>
+    </div>
+
+    <div class='updateEmployeeForm' id='updateEmployeeFormid' >
+      <h4 class='container-column-heading'>Update a Employee Information</h4>
+      <hr class="mt-0" style="margin-bottom: 15px;">
+      <form class ='updateEmployeeInfo' id='updateEmployeeInfoid' method="put">{% csrf_token %}
+          <div class="input-flex">
+              <label for="selectShiftId" class="mb-0">Name :</label>
+              <input type="text" class="input-boxSize" id="Employeenameid" name="Employeename" placeholder='Name' required>
+          </div>
+          <div class="input-flex">
+              <label for="selectShiftId" class="mb-0">Shift :</label>
+              <select name="Shift" id="selectShiftId" class="input-boxSize mb-0" required>
+                  <option value="" disabled selected>Select your option</option>
+                  <option value="Morning Shift">Morning Shift</option>
+                  <option value="Afternoon Shift">Afternoon Shift</option>
+                  <option value="Evening Shift">Evening Shift</option>
+              </select>
+          </div><br>
+          <div class="input-flex">
+            <label for="selectShiftId" class="mb-0">Date :</label>
+            <input type="Date" class="input-boxSize" id="updatedEmployeeDate" name="Date" placeholder='date' required>
+          </div>
+          <hr style="margin-bottom: 10px;">
+          <button class='form-submitBtn' type="submit">Update Task</button>
+      </form>
+      <button class="form-cancelBtn" onclick="updateemployeeinfo()">Cancel</button>
+  </div>
+
+    <div class='popupbox' id='popupboxid'>
+      <h4 class='container-column-heading'>Create Shift</h4>
+      <hr class="mt-0" style="margin-bottom: 15px;">
+      <div>
+        <input type="checkbox" id='opencloseallshiftid' onclick='opencloseallshift()'>
+        <label for="opencloseallshiftid">Show All Shifts :</label>
+      </div>
+      <div>
+        <form class ='popupboxformInfo' id='popupboxformInfoid' method="post">{% csrf_token %}
+          <div style="display: none;">
+              <input type="text" id="popupboxEmployeenameid" name="Employeename" required readonly>
+          </div>
+          <div class="input-flex">
+              <label class="mb-0">Date on Assign :</label>
+              <input type="text" class="input-boxSize" id="popupboxEmployeeDateonAssignid" name="DateonAssign" required readonly>
+          </div>
+          <div class="input-flex" id="subBoxForEmployeeShiftId">
+            <label class="mb-0">Shift :</label>
+            <input type="text" class="input-boxSize" id="popupboxEmployeeshiftid" name="Shift" required readonly>
+          </div>
+          <div style="float: right;">
+            <button class="form-submitBtn createshiftsubmitbtn" id="createshiftsubmitbtnid" type="submit">Create Shift</button>
+          </div>
+        </form>
+      </div>
+      <div class='allShiftBox' id="allShiftBoxid">
+        <div class='changeshiftclass MorningShift' onclick='changeshift(this)'>Morning Shift</div>
+        <div class="changeshiftclass AfternoonShift" onclick='changeshift(this)'>Afternoon Shift</div>
+        <div class="changeshiftclass EveningShift" onclick='changeshift(this)'>Evening Shift</div>
+      </div>
+      <hr style='margin-top: 60px;
+      margin-bottom: 10px;'>
+      <button class="creatshiftform-cancelBtn" id='creatshiftformcancelBtnId' onclick="openpopupforcolumn(this, 'none', 'none')">Cancel</button>
+    </div> 
+
+    <div class='tablebox' id='tableboxid'>
+        <table>
+          <thead>
+            <tr>
+              <th id='Employee'>Employee</th>
+              <th id='Monday, 11/07/2022'>Monday, 11/07/2022</th>
+              <th id='Tuesday, 12/07/2022'>Tuesday, 12/07/2022</th>
+              <th id="Wednesday, 13/07/2022">Wednesday, 13/07/2022</th>
+              <th id="Thursday, 14/07/2022">Thursday, 14/07/2022</th>
+              <th id="Friday, 15/07/2022">Friday, 15/07/2022</th>
+            </tr>
+          </thead>
+          <tbody id="tableboxtbody">
+            {% for Employeename in  EmployeeInformationData %}
+              <tr id="{{Employeename.id}}">
+                <td>
+                  {{Employeename.Employeename}}
+                </td>
+                <td onclick='openpopupforcolumn(this, "{{Employeename.id}}", "{{Employeename.Shift}}")'></td>
+                <td onclick='openpopupforcolumn(this, "{{Employeename.id}}", "{{Employeename.Shift}}")'></td>
+                <td onclick='openpopupforcolumn(this, "{{Employeename.id}}", "{{Employeename.Shift}}")'></td>
+                <td onclick='openpopupforcolumn(this, "{{Employeename.id}}", "{{Employeename.Shift}}")'></td>
+                <td onclick='openpopupforcolumn(this, "{{Employeename.id}}", "{{Employeename.Shift}}")'></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>          
+    </div>
+  
+    <script>
+      function changeshift(element){
+        console.log(element.innerHTML)
+        document.getElementById("popupboxEmployeeshiftid").value = element.innerHTML
+        $(".changeshiftclass").css('background-color', 'white');
+        element.style.background="white"
+        document.getElementById("createshiftsubmitbtnid").click();
+        
+      }
+    </script>
+
+    <script>
+      function opencloseallshift(){
+        if (document.getElementById('opencloseallshiftid').checked==true){
+          document.getElementById("subBoxForEmployeeShiftId").style.display = 'none'
+          document.getElementById("createshiftsubmitbtnid").style.display = 'none'
+          document.getElementById("allShiftBoxid").style.display = 'flex'
+          $(".changeshiftclass").css('background-color', 'white');
+          $("#creatshiftformcancelBtnId").css("margin-left", "83%");
+        }else{
+          document.getElementById("createshiftsubmitbtnid").style.display = 'block'
+          document.getElementById("allShiftBoxid").style.display = 'none'
+          document.getElementById("subBoxForEmployeeShiftId").style.display = 'flex'
+          $("#creatshiftformcancelBtnId").css("margin-left", "51%");
+        }
+      }
+    </script>
+
+    <script>
+      var selecteddate
+      const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+      dateTime = new Date()
+      document.getElementById('EmployeeDate').valueAsDate = new Date();
+      document.getElementById('updatedEmployeeDate').valueAsDate = new Date();
+      if(dateTime.getDay() ==1){
+        selecteddate = new Date();
+      }else{
+        selecteddate = new Date(dateTime. getFullYear(), dateTime. getMonth(), dateTime. getDate()-(dateTime.getDay()-1))
+      }
+      document.getElementById('todaydate').value = new Date(selecteddate. getFullYear(), selecteddate. getMonth(), selecteddate. getDate()).toLocaleDateString() +' To '+new Date(selecteddate. getFullYear(), selecteddate. getMonth(), selecteddate. getDate()+4).toLocaleDateString();
+      function prevdate(){
+        
+        console.log(new Date(selecteddate. getFullYear(), selecteddate. getMonth(), selecteddate. getDate()-7))
+        selecteddate = new Date(selecteddate. getFullYear(), selecteddate. getMonth(), selecteddate. getDate()-7)
+        weeksheduler()
+      }
+
+      function nextdate(){
+        console.log(new Date(selecteddate. getFullYear(), selecteddate. getMonth(), selecteddate. getDate()+7))
+        selecteddate = new Date(selecteddate. getFullYear(), selecteddate. getMonth(), selecteddate. getDate()+7)
+        weeksheduler()
+      }
+    </script>
+
+    <script>
+      function weeksheduler(){
+        console.log('vbhbv')
+        document.getElementById('todaydate').value = new Date(selecteddate. getFullYear(), selecteddate. getMonth(), selecteddate. getDate()).toLocaleDateString() +' To '+new Date(selecteddate. getFullYear(), selecteddate. getMonth(), selecteddate. getDate()+4).toLocaleDateString();
+        $("tr th")[1].innerHTML =weekday[selecteddate. getDay()]+", "+new Date(selecteddate. getFullYear(), selecteddate. getMonth(), selecteddate. getDate()).toLocaleDateString()
+        $("tr th")[2].innerHTML =weekday[selecteddate. getDay()+1]+", "+new Date(selecteddate. getFullYear(), selecteddate. getMonth(), selecteddate. getDate()+1).toLocaleDateString()
+        $("tr th")[3].innerHTML =weekday[selecteddate. getDay()+2]+", "+new Date(selecteddate. getFullYear(), selecteddate. getMonth(), selecteddate. getDate()+2).toLocaleDateString()
+        $("tr th")[4].innerHTML =weekday[selecteddate. getDay()+3]+", "+new Date(selecteddate. getFullYear(), selecteddate. getMonth(), selecteddate. getDate()+3).toLocaleDateString()
+        $("tr th")[5].innerHTML =weekday[selecteddate. getDay()+4]+", "+new Date(selecteddate. getFullYear(), selecteddate. getMonth(), selecteddate. getDate()+4).toLocaleDateString()
+        $("tr th")[1].id =weekday[selecteddate. getDay()]+", "+new Date(selecteddate. getFullYear(), selecteddate. getMonth(), selecteddate. getDate()).toLocaleDateString()
+        $("tr th")[2].id =weekday[selecteddate. getDay()+1]+", "+new Date(selecteddate. getFullYear(), selecteddate. getMonth(), selecteddate. getDate()+1).toLocaleDateString()
+        $("tr th")[3].id =weekday[selecteddate. getDay()+2]+", "+new Date(selecteddate. getFullYear(), selecteddate. getMonth(), selecteddate. getDate()+2).toLocaleDateString()
+        $("tr th")[4].id =weekday[selecteddate. getDay()+3]+", "+new Date(selecteddate. getFullYear(), selecteddate. getMonth(), selecteddate. getDate()+3).toLocaleDateString()
+        $("tr th")[5].id =weekday[selecteddate. getDay()+4]+", "+new Date(selecteddate. getFullYear(), selecteddate. getMonth(), selecteddate. getDate()+4).toLocaleDateString()
+        $("tbody tr").remove()
+        createtrinsidetbody()
+        getshiftdatavalue()
+      }
+    </script>
+
+    <script>
+      function openCloseAddEmployeeForm(){
+        if(document.getElementById("AddEmployeeFormid").style.display == "block"){
+          document.getElementById("AddEmployeeFormid").style.display = "none"
+        }else{
+          document.getElementById("AddEmployeeFormid").style.display = "block"
+          document.getElementById("popupboxid").style.display = "none"
+        }
+      }
+    </script>
+
+    <script>
+      let EmployeeInformation;
+      function createtrinsidetbody(){
+        for(i=0; i < EmployeeInformation.length; i++){
+          var adddataintablebody = $("<tr id="+ EmployeeInformation[i]["id"]+">"+
+            "<td><div class='dropdwoniconintd'><h6>"+EmployeeInformation[i]['Employeename']+
+              "</h6><i class='fa fa-edit' onclick=updateemployeeinfo("+EmployeeInformation[i]["id"]+")></i>"+
+              "<i class='fa fa-trash' onclick=deleteemployeeinfo("+EmployeeInformation[i]["id"]+")></i>"+
+            "</div></td>"+
+            "<td class="+ EmployeeInformation[i]["id"]+"></td>"+
+            "<td class="+ EmployeeInformation[i]["id"]+"></td>"+
+            "<td class="+ EmployeeInformation[i]["id"]+"></td>"+
+            "<td class="+ EmployeeInformation[i]["id"]+"></td>"+
+            "<td class="+ EmployeeInformation[i]["id"]+"></td></tr>")
+          $("#tableboxtbody").append(adddataintablebody)
+          let employeeinformationid = EmployeeInformation[i]["id"]
+          let employeeinformationshift = EmployeeInformation[i]["Shift"]
+          const addclickeventproperty = Array.from(document.getElementsByClassName(EmployeeInformation[i]["id"]));
+            addclickeventproperty.forEach(box => {
+              box.onclick=function(){ openpopupforcolumn(this, employeeinformationid, employeeinformationshift) };
+              //box.addEventListener("click", openpopupforcolumn(this, data["id"], data['Shift']))
+            });
+          }
+      }
+    </script>
+
+    <script>
+      let updateemployeeinfoidvalue;
+      function updateemployeeinfo(id){
+        if(document.getElementById("updateEmployeeFormid").style.display == "block"){
+          document.getElementById("updateEmployeeFormid").style.display = "none"
+        }else{
+          document.getElementById("updateEmployeeFormid").style.display = "block"
+          document.getElementById("popupboxid").style.display = "none"
+          document.getElementById("AddEmployeeFormid").style.display = "none"
+        }
+        updateemployeeinfoidvalue = id
+      }
+    </script>
+
+    <script>
+      $("#updateEmployeeInfoid").submit(function (e) {
+          // preventing from page reload and default actions
+          e.preventDefault();
+          // serialize the data for sending the form data.
+          var serializedData = $(this).serialize();
+          console.log(this)
+          var formData = new FormData(this);
+          $.ajax({
+              url: "/EmployeeShift/EmployeeInformation/"+ updateemployeeinfoidvalue+"/",
+              type: "PUT",
+              dataType: "json",
+              data: formData,
+              headers: {
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRFToken": getCookie("csrftoken"),  // don't forget to include the 'getCookie' function
+            },
+            processData: false,
+            contentType: false,
+              success: (data) => {
+                  console.log(data);
+                  getemployeeinformationdata()
+                  $("tr#"+updateemployeeinfoidvalue+" td div h6")[0].innerHTML = data['Employeename']
+                  document.getElementById("updateEmployeeFormid").style.display = "none"
+                  opencloseallshift()
+              },
+              error: (error) => {
+                  console.log(error);
+              }
+          });
+      });
+    </script>
+
+
+    <script>
+      function deleteemployeeinfo(id){
+          $.ajax({
+            url: "/EmployeeShift/EmployeeInformation/"+id,
+            type: "DELETE",
+            dataType: "json",
+            headers: {
+              "X-Requested-With": "XMLHttpRequest",
+              "X-CSRFToken": getCookie("csrftoken"),  
+            },
+            processData: false,
+            contentType: false,
+            success: (data) => {
+                console.log(data);
+                $("tr#"+id).remove()
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        });
+      }
+    </script>
+
+
+    <script>
+      let getdata
+      function getshiftdatavalue(){
+        $.ajax({
+            url: "/EmployeeShift/EmployeeShiftInformation/",
+            type: "GET",
+            dataType: "json",
+            success: (data) => {
+                console.log(data);
+                let theadtrthdata = $("th")
+                for(i=0; i < data.length; i++){
+                  console.log(data)
+                  if (document.getElementById(data[i]['DateonAssign'])){
+                  let tabletheadtrthdata= document.getElementById(data[i]['DateonAssign'])
+                  let tabletheadtrtddata = $("tr#"+data[i]['Employeename']).find('td')[$(tabletheadtrthdata).index()]
+                  console.log(tabletheadtrtddata)
+                  var adddataintablebody = $("<div class='shiftintd "+data[i]['Shift'].replace(' ', '')+"' id="+ data[i]["id"]+">"+
+                    "<p class='mb-0'>"+data[i]['Shift']+"</p>"+
+                    "<i class='fa fa-trash' onclick='deleteshift("+data[i]['id']+")''></i></div>")
+                  $(tabletheadtrtddata).append(adddataintablebody)
+                  }
+                  else{
+                    console.log('not present')
+                  }
+                }
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        });
+      }
+    </script>
+
+    <script>
+        $.ajax({
+            url: "/EmployeeShift/EmployeeShiftInformation/",
+            type: "GET",
+            dataType: "json",
+            success: (data) => {
+                let theadtrthdata = $("th")
+                for(i=0; i < data.length; i++){
+                  let tabletheadtrthdata= document.getElementById(data[i]['DateonAssign'])
+                  let tabletheadtrtddata = $("tr#"+data[i]['Employeename']).find('td')[$(tabletheadtrthdata).index()]
+                  var adddataintablebody = $("<div class='shiftintd "+data[i]['Shift'].replace(' ', '')+"' id="+ data[i]["id"]+">"+
+                    "<p class='mb-0'>"+data[i]['Shift']+"</p>"+
+                    "<i class='fa fa-trash' onclick='deleteshift("+data[i]['id']+")''></i></div>")
+                  $(tabletheadtrtddata).append(adddataintablebody)
+                }
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        });
+    </script>
+
+    <script>
+      function getCookie(name) {
+          let cookieValue = null;
+          if (document.cookie && document.cookie !== "") {
+              const cookies = document.cookie.split(";");
+              for (let i = 0; i < cookies.length; i++) {
+                  const cookie = cookies[i].trim();
+                  // Does this cookie string begin with the name we want?
+                  if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                      break;
+                  }
+              }
+          }
+          return cookieValue;
+      }
+    </script>
+
+    <script>
+      function deleteshift(id){
+        console.log(id)
+        $.ajax({
+          url: "/EmployeeShift/EmployeeShiftInformation/"+id,
+          type: "DELETE",
+          dataType: "json",
+          headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            "X-CSRFToken": getCookie("csrftoken"),  
+          },
+          processData: false,
+          contentType: false,
+          success: (data) => {
+              console.log(data);
+              $('#'+id).remove();
+          },
+          error: (error) => {
+              console.log(error);
+          }
+      });
+      }
+    </script>
+
+    <script>
+      let tablecolumninfobox;
+      function openpopupforcolumn(element, EmployeeName, EmployeeShift){
+        document.getElementById("opencloseallshiftid").checked = false;
+        opencloseallshift()
+        console.log('openpopupforcolumn')
+        if(document.getElementById("popupboxid").style.display == "none" && element.childNodes.length == 0){
+          // console.log($(element).index(), $(element).parent().index())
+          // console.log($(element), $(element).parent()[0].id)
+          document.getElementById("popupboxid").style.display = "block"
+          document.getElementById("AddEmployeeFormid").style.display = "none"
+          let dateonassign = $(".tablebox").find('th').eq($(element).index())[0].innerHTML
+          $('#popupboxEmployeeDateonAssignid').val(dateonassign)
+          $('#popupboxEmployeenameid').val(EmployeeName)
+          $('#popupboxEmployeeshiftid').val(EmployeeShift)
+          tablecolumninfobox = element;
+        }else{
+          document.getElementById("popupboxid").style.display = "none"
+        }
+        $(".shiftintd").css('background-color', 'white');
+      }
+    </script>
+
+
+    <script>
+      $("#popupboxformInfoid").submit(function (e) {
+          // preventing from page reload and default actions
+          e.preventDefault();
+          // serialize the data for sending the form data.
+          var serializedData = $(this).serialize();
+
+          console.log(serializedData)
+          $.ajax({
+            url: "/EmployeeShift/EmployeeShiftInformation/",
+            type: "POST",
+            dataType: "json",
+            data: serializedData,
+            success: (data) => {
+              console.log(data);
+              $('#popupboxformInfoid').trigger("reset");
+              var adddataintablebody = $("<div class='shiftintd "+data['Shift'].replace(' ', '')+"' id="+ data["id"]+">"+
+                "<p class='mb-0'>"+data['Shift']+"</p>"+
+                "<i class='fa fa-trash' onclick='deleteshift("+data['id']+")''></i></div>")
+              $(tablecolumninfobox).append(adddataintablebody)
+              document.getElementById("popupboxid").style.display = "none"
+            },
+            error: (error) => {
+              console.log(error);
+            }
+          });
+      })
+    </script>
+
+    <script>
+      $.ajax({
+        url: "/EmployeeShift/EmployeeInformation/",
+        type: "GET",
+        dataType: "json",
+        success: (data) => {
+          EmployeeInformation = data;
+        },
+        error: (error) => {
+            console.log(error);
+        }
+      });
+    </script>
+    
+    <script>
+      function getemployeeinformationdata(){
+        $.ajax({
+          url: "/EmployeeShift/EmployeeInformation/",
+          type: "GET",
+          dataType: "json",
+          success: (data) => {
+            EmployeeInformation = data;
+            console.log(EmployeeInformation)
+          },
+          error: (error) => {
+              console.log(error);
+          }
+        });
+      }
+    </script>
+
+    <script>
+        $("#addEmployeeInfoid").submit(function (e) {
+            // preventing from page reload and default actions
+            e.preventDefault();
+            // serialize the data for sending the form data.
+            var serializedData = $(this).serialize();
+
+            console.log(serializedData)
+            $.ajax({
+                url: "/EmployeeShift/EmployeeInformation/",
+                type: "POST",
+                dataType: "json",
+                data: serializedData,
+                success: (data) => {
+                  console.log(data);
+                  getemployeeinformationdata()
+                  $('#addEmployeeInfoid').trigger("reset");
+                  var adddataintablebody = $("<tr id="+ data["id"]+">"+
+                    "<td><div class='dropdwoniconintd'><h6>"+data['Employeename']+
+                      "</h6><i class='fa fa-edit' onclick=updateemployeeinfo("+data["id"]+")></i>"+
+                      "<i class='fa fa-trash' onclick=deleteemployeeinfo("+data["id"]+")></i>"+
+                    "</div></td>"+
+                    "<td class="+ data["id"]+"></td>"+
+                    "<td class="+ data["id"]+"></td>"+
+                    "<td class="+ data["id"]+"></td>"+
+                    "<td class="+ data["id"]+"></td>"+
+                    "<td class="+ data["id"]+"></td></tr>")
+                  $("#tableboxtbody").append(adddataintablebody)
+                  const addclickeventproperty = Array.from(document.getElementsByClassName(data["id"]));
+                    addclickeventproperty.forEach(box => {
+                      box.onclick=function(){ openpopupforcolumn(this, data["id"], data['Shift']) };
+                      //box.addEventListener("click", openpopupforcolumn(this, data["id"], data['Shift']))
+                    });
+                    document.getElementById("AddEmployeeFormid").style.display = "none"
+                },
+                error: (error) => {
+                  console.log(error);
+                }
+              });
+        })
+
+        window.onload = weeksheduler;
+    </script>
+    <!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+</body>
+
+</html>
+

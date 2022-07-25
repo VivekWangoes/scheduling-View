@@ -1,0 +1,171 @@
+body{
+    padding: 0px 10px 0px 10px;
+    background: white;
+}
+.form-submitBtn{
+    float:right;
+    background: #4a6b0e;
+    color: white;
+    border: 1px solid;
+    height: 30px;
+}
+.form-cancelBtn{
+    float:right;
+    background: red;
+    color: white;
+    margin-right: 10px;
+    border: 1px solid;
+    height: 30px;
+}
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    font-family: Lato-Bold;
+    font-size: 18px;
+    color: #fff;
+    line-height: 1.4;
+    background-color: #6c7ae0;
+}
+
+td, th {
+    border: 1px solid #999393;
+    text-align: center;
+    padding: 8px;
+    
+}
+
+tr {
+    background-color: #dddddd;
+}
+
+.popupbox{
+    width: 360px;
+    height: 54%;
+    position: absolute;
+    margin-top: 6%;
+    margin-left: 35%;
+    background:#e9e6e6;
+    padding: 10px 10px 10px 10px;
+    z-index:1;
+    box-shadow: 0 0 10px 5px #9c9f98;
+    display:none;
+}
+.shiftintd{
+    display:flex;
+    gap: 10px;
+    background: white;
+    padding:5px;
+    height: 40px;
+    align-items: center;
+    padding-top: 7px;
+    padding-left:10px
+}
+.AddEmployeeForm, .updateEmployeeForm{
+    display:none;
+    position: absolute;
+    background: white;
+    top: 20%;
+    margin-left: 35%;
+    padding: 10px 10px 0px 10px;
+    z-index:1;
+    box-shadow: 0 0 10px 5px #9c9f98;
+    width: 360px;
+    height: 54%;
+}
+.openCloseAddEmployeeForm{
+    float: right;
+    color: white;
+    background: #6c7ae0;
+    border: 1px solid #6c7ae0;
+    margin: 10px 0px 10px 0px;
+}
+.input-flex{
+    display: flex;
+    flex-direction: column;
+}
+.input-boxSize{
+    height: 30px;
+    margin-bottom: 20px;
+}
+.fafaicon{
+    background: #6c7ae0;
+    width: 30px;       
+    font-size: 28px;
+    text-align: center;
+    font-weight: 900;
+}
+.allShiftBox{
+    display: none;
+    gap: 10px;
+    height: 73px;
+}
+
+.changeshiftclass{
+    padding-left: 5px;
+    background:white;
+    height: 72%;
+    padding: 5px;
+    
+}
+.changeshiftclass:hover, .changeshiftclass:active{
+    background:#b7abab;
+}
+
+.MorningShift{
+    border-left: 5px solid green;
+}
+
+.AfternoonShift{
+    border-left: 5px solid blue;
+}
+
+.EveningShift{
+    border-left: 5px solid red;
+}
+
+.createshiftsubmitbtn{
+    position: absolute;
+    right: 10px;
+    top: 89.1%;
+    FONT-WEIGHT: 500;
+}
+.creatshiftform-cancelBtn{
+    background: red;
+    color: white;
+    border: 1px solid;
+    height: 30px;
+    margin-left: 51%;
+    margin-right: 10px;
+}
+.dropdowntogglebtn{
+    width: 0px;
+    padding: 5px;
+    background: #dddddd;
+    border: 0px;
+}
+.dropdowntogglebtn:focus, .dropdowntogglebtn:active, .dropdowntogglebtn:show,
+.btn-check:focus+.btn, .btn:focus{
+    width: 0px;
+    padding: 5px;
+    background: white;
+    border: 0px;
+}
+
+.dropdwoniconintd{
+    display: flex;
+    gap: 10px;
+}
+.weekshedulerBox{
+    display:inline-flex; 
+    margin: 10px 0px 10px 0px; 
+    margin-left: 35%;
+}
+.weekshduledinfobox{
+    width: 200px;
+    border: 1px solid #6c7ae0;
+    text-align: center;
+}

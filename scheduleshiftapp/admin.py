@@ -1,0 +1,13 @@
+from django.contrib import admin
+from .models import *
+
+# Register your models here.
+admin.site.register(EmployeeInformationModel)
+
+
+class EmployeeShiftInformationAdmin(admin.ModelAdmin):
+    list_display = ('Employeename', 'Shift', 'DateonAssign')
+
+
+admin.site.register(EmployeeShiftInformationModel,
+                    EmployeeShiftInformationAdmin)
